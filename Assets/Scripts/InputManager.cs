@@ -65,7 +65,14 @@ public class InputManager : MonoBehaviour
 
 
         //Collisions
-
+        if(IsBlockedRight())
+        {
+            positionFin.x = Mathf.Min(positionInit.x,positionFin.x);
+        }
+        if (IsBlockedLeft())
+        {
+            positionFin.x = Mathf.Max(positionInit.x, positionFin.x);
+        }
 
 
         transform.position = positionFin;
@@ -73,7 +80,16 @@ public class InputManager : MonoBehaviour
 
     bool IsGrounded() 
     {
-        
         return Physics2D.Raycast(transform.position - 0.51f * Vector3.up, Vector3.down, 0.01f);
+    }
+
+    bool IsBlockedRight()
+    {
+        return Physics2D.Raycast(transform.position + 0.51f * Vector3.right, Vector3.right, 0.01f);
+    }
+
+    bool IsBlockedLeft()
+    {
+        return Physics2D.Raycast(transform.position + 0.51f * Vector3.left, Vector3.left, 0.01f);
     }
 }
