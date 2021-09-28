@@ -7,8 +7,8 @@ public class InputManager : MonoBehaviour
     public float acceleration;
     public float verticalacceleration;
     public float jumpHeight;
+
     private Vector3 jumpStartPosition;
-    private float distToGround;
     private GameObject ground;
     private bool isJumpingUp;
     private Vector3 moveDirection;
@@ -19,17 +19,15 @@ public class InputManager : MonoBehaviour
     {
         positionInit = transform.position;
         positionFin = positionInit;
-        distToGround = 0;
         ground = GameObject.Find("Ground");
         jumpStartPosition = positionInit;
     }
 
 
-    void OnTriggerEnter2D(Collider2D collision)
+    /*void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("collision");
-        //distToGround = GetComponent<Collider2D>().bounds.extents.y - 0.5f * collision.gameObject.transform.lossyScale.y;
-    }
+    }*/
 
     // Update is called once per frame
     void Update()
@@ -47,17 +45,19 @@ public class InputManager : MonoBehaviour
             jumpStartPosition = positionInit;
             isJumpingUp = true;
         }
-        //en train de sauter
+        //En train de sauter
         if(isJumpingUp)
         {
             positionFin += Vector3.up * verticalacceleration * Time.deltaTime;
         }
-
-        if(positionFin.y >= jumpStartPosition.y+ jumpHeight)
+        
+        //Hauteur maximale atteinte
+        if(positionFin.y >= jumpStartPosition.y + jumpHeight)
         {
             isJumpingUp = false;
         }
 
+        //Chute
         if(!IsGrounded() && !isJumpingUp)
         {
             positionFin += Vector3.down * verticalacceleration * Time.deltaTime;
@@ -74,10 +74,13 @@ public class InputManager : MonoBehaviour
             positionFin.x = Mathf.Max(positionInit.x, positionFin.x);
         }
 
-
+        //Mouvement
         transform.position = positionFin;
     }
 
+
+
+    //TODO : dimensions relatives au Player
     bool IsGrounded() 
     {
         return Physics2D.Raycast(transform.position - 0.51f * Vector3.up, Vector3.down, 0.01f);
