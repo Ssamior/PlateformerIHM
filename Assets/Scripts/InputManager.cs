@@ -5,13 +5,14 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     public float acceleration;
-    public float verticalacceleration;
+    public float verticalAcceleration;
     public float jumpHeight;
-    public float dashCooldown;
+    public float gravity = 9.81f;
     public float baseAirFriction;
     public float fallingAirFriction;
     public float baseGroundFriction;
     public float sprintGroundFriction;
+    public float dashCooldown;
     public LayerMask Walls;
 
     private Vector3 jumpStartPosition;
@@ -25,6 +26,8 @@ public class InputManager : MonoBehaviour
     private float lastDash;
     private float groundFriction;
     private float airFriction;
+    private float yVel = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -58,12 +61,10 @@ public class InputManager : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.W))
         {
-            Debug.Log("shift down");
             groundFriction = sprintGroundFriction;
         }
         if (Input.GetKeyUp(KeyCode.W))
         {
-            Debug.Log("shift up");
             groundFriction = baseGroundFriction;
         }
 
@@ -72,29 +73,24 @@ public class InputManager : MonoBehaviour
         positionFin += moveDirection;
 
         //Saut
-        if (CanJump())
+        //Input de saut
+        if (CanJump() && Input.GetKeyDown(KeyCode.Space))
         {
             jumpStartPosition = positionInit;
             isJumpingUp = true;
             jumpsNumber += 1;
+            yVel = verticalAcceleration; //impulsion
         }
-        //En train de sauter
-        if(isJumpingUp)
-        {
-            positionFin += Vector3.up * verticalacceleration * Time.deltaTime;
-        }
-        
         //Hauteur maximale atteinte
         if(positionFin.y >= jumpStartPosition.y + jumpHeight)
         {
             isJumpingUp = false;
         }
-
         //Chute
         if(!IsGrounded() && !isJumpingUp)
         {
             airFriction = fallingAirFriction;
-            positionFin += Vector3.down * verticalacceleration * Time.deltaTime;
+            yVel -= gravity * Time.deltaTime;
         }
 
         //Cooldowns
@@ -119,9 +115,11 @@ public class InputManager : MonoBehaviour
         {
             jumpsNumber = 0;
             airFriction = baseAirFriction;
+            yVel = 0;
         }
 
         //Mouvement
+        positionFin += Vector3.up * yVel * Time.deltaTime;
         transform.position = positionFin;
     }
 
@@ -144,7 +142,7 @@ public class InputManager : MonoBehaviour
     }
     bool CanJump()
     {
-        return (jumpsNumber < 2 && Input.GetKeyDown(KeyCode.Space));
+        return (jumpsNumber < 2);
     }
 
     void Dash()

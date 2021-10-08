@@ -422,16 +422,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   acceleration: 0.05
-  verticalacceleration: 15
-  jumpHeight: 4
+  verticalAcceleration: 20
+  jumpHeight: 1
   dashCooldown: 1
   baseAirFriction: 1
-  fallingAirFriction: 0.5
-  baseGroundFriction: 0.5
-  sprintGroundFriction: 1
+  fallingAirFriction: 0.8
+  baseGroundFriction: 1
+  sprintGroundFriction: 1.5
   Walls:
     serializedVersion: 2
     m_Bits: 64
+  gravity: 100
 --- !u!212 &907267586
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -491,7 +492,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 907267584}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -4.3, z: 0}
+  m_LocalPosition: {x: 0.1, y: 12.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
