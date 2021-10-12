@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    public GameObject player;
     public float acceleration;
     public float verticalAcceleration;
     public float jumpHeight;
@@ -127,7 +128,6 @@ public class InputManager : MonoBehaviour
         positionFin += Vector3.up * yVel * timeqt;
         transform.position = positionFin;
     }
-
 
 
     //TODO : dimensions relatives au Player
