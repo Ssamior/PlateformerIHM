@@ -138,7 +138,7 @@ public class InputManager : MonoBehaviour
     }
     bool IsGrounded(Vector3 position)
     {
-        return Physics2D.Raycast(position + transform.localScale.y / 2 * Vector3.down, Vector3.down,0.01f, Walls) && !isJumpingUp;
+        return (Physics2D.Raycast(position + transform.localScale.x *0.4f * Vector3.left + transform.localScale.y / 2 * Vector3.down, Vector3.down,0.01f, Walls) || Physics2D.Raycast(position - transform.localScale.x * 0.4f * Vector3.left + transform.localScale.y / 2 * Vector3.down, Vector3.down, 0.01f, Walls)) && !isJumpingUp;
     }
     bool IsBlockedRight(Vector3 position)
     {
