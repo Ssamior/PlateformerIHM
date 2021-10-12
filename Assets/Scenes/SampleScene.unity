@@ -424,15 +424,15 @@ MonoBehaviour:
   acceleration: 0.05
   verticalAcceleration: 20
   jumpHeight: 1
-  dashCooldown: 1
+  gravity: 100
   baseAirFriction: 1
   fallingAirFriction: 0.8
   baseGroundFriction: 1
   sprintGroundFriction: 1.5
+  dashCooldown: 1
   Walls:
     serializedVersion: 2
     m_Bits: 64
-  gravity: 100
 --- !u!212 &907267586
 SpriteRenderer:
   m_ObjectHideFlags: 0

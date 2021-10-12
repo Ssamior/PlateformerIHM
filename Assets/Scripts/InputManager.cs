@@ -117,6 +117,10 @@ public class InputManager : MonoBehaviour
             airFriction = baseAirFriction;
             yVel = 0;
         }
+        if(IsInsidePlatform())
+        {
+            positionFin += 0.01f * Vector3.up;
+        }
 
         //Mouvement
         positionFin += Vector3.up * yVel * Time.deltaTime;
@@ -126,11 +130,15 @@ public class InputManager : MonoBehaviour
 
 
     //TODO : dimensions relatives au Player
-    bool IsGrounded() 
+    
+    bool IsInsidePlatform()
     {
-        return Physics2D.Raycast(transform.position - transform.localScale.y / 2 * Vector3.up, Vector3.down, 0.01f, Walls) && !isJumpingUp;
+        return Physics2D.Raycast(transform.position - transform.localScale.y / 2 * Vector3.up + transform.localScale.x * 0.4f * Vector3.left, Vector3.down, 0.01f, Walls) || Physics2D.Raycast(transform.position - transform.localScale.y / 2 * Vector3.up - transform.localScale.x * 0.4f * Vector3.left, Vector3.down, 0.01f, Walls);
     }
-
+    bool IsGrounded()
+    {
+        return IsInsidePlatform() && !isJumpingUp;
+    }
     bool IsBlockedRight()
     {
         return Physics2D.Raycast(transform.position + transform.localScale.x / 2 * Vector3.right, Vector3.right, 0.01f, Walls);
@@ -140,6 +148,9 @@ public class InputManager : MonoBehaviour
     {
         return Physics2D.Raycast(transform.position + transform.localScale.x / 2 * Vector3.left, Vector3.left, 0.01f, Walls);
     }
+
+
+
     bool CanJump()
     {
         return (jumpsNumber < 2);
