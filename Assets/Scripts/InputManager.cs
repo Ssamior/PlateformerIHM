@@ -16,7 +16,7 @@ public class InputManager : MonoBehaviour
     public float dashCooldown;
     public LayerMask Walls;
     public GameObject particle;
-    
+
 
     private Vector3 jumpStartPosition;
     private GameObject ground;
@@ -134,7 +134,7 @@ public class InputManager : MonoBehaviour
 
 
     //TODO : dimensions relatives au Player
-    
+
     bool IsInsidePlatform(Vector3 position)
     {
         return Physics2D.Raycast(position + transform.localScale.x * 0.4f * Vector3.left, Vector3.down, transform.localScale.y * 0.45f, Walls) || Physics2D.Raycast(position - transform.localScale.x * 0.4f * Vector3.left, Vector3.down, transform.localScale.y * 0.45f, Walls);
@@ -169,6 +169,7 @@ public class InputManager : MonoBehaviour
             positionFin = dashPosition;
             lastDash = Time.time;
         }
+        Die();
 
     }
 
@@ -176,4 +177,9 @@ public class InputManager : MonoBehaviour
     {
         Instantiate(particle, new Vector3(transform.position.x, transform.position.y - transform.localScale.y/2, 0), Quaternion.identity);
     }
+    void Die()
+    {
+        GameManager gm = FindObjectOfType <GameManager>();
+        gm.KillPlayer(gameObject);
+      }
 }
