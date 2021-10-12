@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InstantiatePlayer : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     public GameObject player;
     public float x;
@@ -11,6 +11,12 @@ public class InstantiatePlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Invoke("Player", 1.0f);
+    }
+
+    public void KillPlayer(GameObject player)
+    {
+        Destroy(player);
         Invoke("Player", 1.0f);
     }
 

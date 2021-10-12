@@ -166,6 +166,13 @@ public class InputManager : MonoBehaviour
             positionFin = dashPosition;
             lastDash = Time.time;
         }
+        Die();
 
+    }
+
+    void Die()
+    {
+        GameManager gm = FindObjectOfType <GameManager>();
+        gm.KillPlayer(gameObject);
     }
 }

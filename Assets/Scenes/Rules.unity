@@ -559,7 +559,9 @@ MonoBehaviour:
 
     Jump - Space
 
-    ...
+    E - Dash
+
+    W (Shift) - Sprint
 
 '
 --- !u!222 &1782215929
