@@ -119,7 +119,7 @@ public class InputManager : MonoBehaviour
         }
         if(IsInsidePlatform())
         {
-            positionFin += 0.01f * Vector3.up;
+            positionFin += 10 * Time.deltaTime * Vector3.up;
         }
 
         //Mouvement
