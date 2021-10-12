@@ -136,6 +136,7 @@ MonoBehaviour:
   Walls:
     serializedVersion: 2
     m_Bits: 64
+  particle: {fileID: 1644846907365330136, guid: 97137b930266ee04987dd27a2e27be3f, type: 3}
 --- !u!50 &1228442789307181438
 Rigidbody2D:
   serializedVersion: 4

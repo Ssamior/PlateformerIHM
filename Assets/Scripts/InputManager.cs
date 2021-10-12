@@ -15,6 +15,8 @@ public class InputManager : MonoBehaviour
     public float sprintGroundFriction;
     public float dashCooldown;
     public LayerMask Walls;
+    public GameObject particle;
+    
 
     private Vector3 jumpStartPosition;
     private GameObject ground;
@@ -81,6 +83,7 @@ public class InputManager : MonoBehaviour
             isJumpingUp = true;
             jumpsNumber += 1;
             yVel = verticalAcceleration; //impulsion
+            SpawnParticles();
         }
         //Hauteur maximale atteinte
         if(positionFin.y >= jumpStartPosition.y + jumpHeight)
@@ -167,5 +170,10 @@ public class InputManager : MonoBehaviour
             lastDash = Time.time;
         }
 
+    }
+
+    void SpawnParticles()
+    {
+        Instantiate(particle, new Vector3(transform.position.x, transform.position.y - transform.localScale.y/2, 0), Quaternion.identity);
     }
 }
