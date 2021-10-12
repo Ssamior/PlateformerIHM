@@ -49,6 +49,7 @@ public class MovingPlatform : MonoBehaviour
         if (Vector3.Distance(positionInit,transform.position) >= distance)
         {
             returnToPosition = !returnToPosition;
+            positionInit = transform.position;
         }
     }
 }

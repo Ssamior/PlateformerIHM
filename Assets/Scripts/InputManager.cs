@@ -27,7 +27,7 @@ public class InputManager : MonoBehaviour
     private float groundFriction;
     private float airFriction;
     private float yVel = 0;
-
+    private float timeqt = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -52,7 +52,7 @@ public class InputManager : MonoBehaviour
         positionInit = transform.position;
         positionFin = positionInit;
         horizontalInput = Input.GetAxis("Horizontal");
-
+        timeqt = Time.deltaTime;
 
         //Inputs
         if (Input.GetKeyDown(KeyCode.E))
@@ -69,7 +69,7 @@ public class InputManager : MonoBehaviour
         }
 
         //Deplacement horizontal
-        moveDirection = horizontalInput * acceleration * groundFriction * airFriction * Vector3.right;
+        moveDirection = timeqt * horizontalInput * acceleration * groundFriction * airFriction * Vector3.right;
         positionFin += moveDirection;
 
         //Saut
@@ -87,10 +87,10 @@ public class InputManager : MonoBehaviour
             isJumpingUp = false;
         }
         //Chute
-        if(!IsGrounded() && !isJumpingUp)
+        if(!IsGrounded(positionFin) && !isJumpingUp)
         {
             airFriction = fallingAirFriction;
-            yVel -= gravity * Time.deltaTime;
+            yVel -= gravity * timeqt;
         }
 
         //Cooldowns
@@ -101,29 +101,29 @@ public class InputManager : MonoBehaviour
 
 
         //Collisions
-        if(IsBlockedRight())
+        if(IsBlockedRight(positionFin))
         {
             jumpsNumber = 1;
             positionFin.x = Mathf.Min(positionInit.x,positionFin.x);
         }
-        if (IsBlockedLeft())
+        if (IsBlockedLeft(positionFin))
         {
             jumpsNumber = 1;
             positionFin.x = Mathf.Max(positionInit.x, positionFin.x);
         }
-        if (IsGrounded())
+        if (IsGrounded(positionFin))
         {
             jumpsNumber = 0;
             airFriction = baseAirFriction;
             yVel = 0;
         }
-        if(IsInsidePlatform())
+        if(IsInsidePlatform(positionFin))
         {
-            positionFin += 10 * Time.deltaTime * Vector3.up;
+            positionFin += 10 * timeqt * Vector3.up;
         }
 
         //Mouvement
-        positionFin += Vector3.up * yVel * Time.deltaTime;
+        positionFin += Vector3.up * yVel * timeqt;
         transform.position = positionFin;
     }
 
@@ -131,22 +131,22 @@ public class InputManager : MonoBehaviour
 
     //TODO : dimensions relatives au Player
     
-    bool IsInsidePlatform()
+    bool IsInsidePlatform(Vector3 position)
     {
-        return Physics2D.Raycast(transform.position - transform.localScale.y / 2 * Vector3.up + transform.localScale.x * 0.4f * Vector3.left, Vector3.down, 0.01f, Walls) || Physics2D.Raycast(transform.position - transform.localScale.y / 2 * Vector3.up - transform.localScale.x * 0.4f * Vector3.left, Vector3.down, 0.01f, Walls);
+        return Physics2D.Raycast(position + transform.localScale.x * 0.4f * Vector3.left, Vector3.down, transform.localScale.y * 0.45f, Walls) || Physics2D.Raycast(position - transform.localScale.x * 0.4f * Vector3.left, Vector3.down, transform.localScale.y * 0.45f, Walls);
     }
-    bool IsGrounded()
+    bool IsGrounded(Vector3 position)
     {
-        return IsInsidePlatform() && !isJumpingUp;
+        return IsInsidePlatform(position) && !isJumpingUp;
     }
-    bool IsBlockedRight()
+    bool IsBlockedRight(Vector3 position)
     {
-        return Physics2D.Raycast(transform.position + transform.localScale.x / 2 * Vector3.right, Vector3.right, 0.01f, Walls);
+        return Physics2D.Raycast(position + transform.localScale.x / 2 * Vector3.right, Vector3.right, 0.01f, Walls);
     }
 
-    bool IsBlockedLeft()
+    bool IsBlockedLeft(Vector3 position)
     {
-        return Physics2D.Raycast(transform.position + transform.localScale.x / 2 * Vector3.left, Vector3.left, 0.01f, Walls);
+        return Physics2D.Raycast(position + transform.localScale.x / 2 * Vector3.left, Vector3.left, 0.01f, Walls);
     }
 
 
