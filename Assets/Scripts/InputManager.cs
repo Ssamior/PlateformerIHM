@@ -117,6 +117,7 @@ public class InputManager : MonoBehaviour
             airFriction = baseAirFriction;
             yVel = 0;
         }
+
         if(IsInsidePlatform(positionFin))
         {
             positionFin += 10 * timeqt * Vector3.up;
@@ -137,7 +138,7 @@ public class InputManager : MonoBehaviour
     }
     bool IsGrounded(Vector3 position)
     {
-        return IsInsidePlatform(position) && !isJumpingUp;
+        return Physics2D.Raycast(position + transform.localScale.y / 2 * Vector3.down, Vector3.down,0.01f, Walls) && !isJumpingUp;
     }
     bool IsBlockedRight(Vector3 position)
     {
