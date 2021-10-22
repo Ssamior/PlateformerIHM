@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InputManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class InputManager : MonoBehaviour
     public float sprintGroundFriction;
     public float dashCooldown;
     public LayerMask Walls;
+    public LayerMask Water;
     public GameObject particle;
 
 
@@ -31,6 +33,7 @@ public class InputManager : MonoBehaviour
     private float airFriction;
     private float yVel = 0;
     private float timeqt = 0;
+    private bool isInWater;
     // Start is called before the first frame update
     void Start()
     {
@@ -56,19 +59,24 @@ public class InputManager : MonoBehaviour
         positionFin = positionInit;
         horizontalInput = Input.GetAxis("Horizontal");
         timeqt = Time.deltaTime;
+        isInWater = IsInWater(positionInit);
 
         //Inputs
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
         if (Input.GetKeyDown(KeyCode.E))
         {
             Dash();
         }
-        if(Input.GetKeyDown(KeyCode.W))
+        if(Input.GetKeyDown(KeyCode.LeftShift))
         {
-            groundFriction = sprintGroundFriction;
+            groundFriction = isInWater ? sprintGroundFriction/2 : sprintGroundFriction;
         }
-        if (Input.GetKeyUp(KeyCode.W))
+        if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            groundFriction = baseGroundFriction;
+            groundFriction = isInWater ? baseGroundFriction/2 : baseGroundFriction;
         }
 
         //Deplacement horizontal
@@ -81,9 +89,9 @@ public class InputManager : MonoBehaviour
         {
             jumpStartPosition = positionInit;
             isJumpingUp = true;
-            jumpsNumber += 1;
-            yVel = verticalAcceleration; //impulsion
-            SpawnParticles();
+            jumpsNumber += isInWater ? 0 : 1; //on ne compte pas les sauts dans l'eau
+            yVel = isInWater ? verticalAcceleration/1.5f : verticalAcceleration; //impulsion
+            JumpParticles();
         }
         //Hauteur maximale atteinte
         if(positionFin.y >= jumpStartPosition.y + jumpHeight)
@@ -93,8 +101,8 @@ public class InputManager : MonoBehaviour
         //Chute
         if(!IsGrounded(positionFin) && !isJumpingUp)
         {
-            airFriction = fallingAirFriction;
-            yVel -= gravity * timeqt;
+            airFriction = isInWater ? fallingAirFriction/2 : fallingAirFriction;
+            yVel -= isInWater ? gravity * timeqt / 2 : gravity * timeqt;
         }
 
         //Cooldowns
@@ -118,14 +126,14 @@ public class InputManager : MonoBehaviour
         if (IsGrounded(positionFin))
         {
             jumpsNumber = 0;
-            airFriction = baseAirFriction;
+            airFriction = isInWater ? baseAirFriction/2 : baseAirFriction;
             yVel = 0;
         }
-
         if(IsInsidePlatform(positionFin))
         {
             positionFin += 10 * timeqt * Vector3.up;
         }
+
 
         //Mouvement
         positionFin += Vector3.up * yVel * timeqt;
@@ -135,6 +143,10 @@ public class InputManager : MonoBehaviour
 
     //TODO : dimensions relatives au Player
 
+    bool IsInWater(Vector3 position)
+    {
+        return Physics2D.Raycast(position, Vector3.up, 0.1f, Water);
+    }
     bool IsInsidePlatform(Vector3 position)
     {
         return Physics2D.Raycast(position + transform.localScale.x * 0.4f * Vector3.left, Vector3.down, transform.localScale.y * 0.45f, Walls) || Physics2D.Raycast(position - transform.localScale.x * 0.4f * Vector3.left, Vector3.down, transform.localScale.y * 0.45f, Walls);
@@ -147,13 +159,10 @@ public class InputManager : MonoBehaviour
     {
         return Physics2D.Raycast(position + transform.localScale.x / 2 * Vector3.right, Vector3.right, 0.01f, Walls);
     }
-
     bool IsBlockedLeft(Vector3 position)
     {
         return Physics2D.Raycast(position + transform.localScale.x / 2 * Vector3.left, Vector3.left, 0.01f, Walls);
     }
-
-
 
     bool CanJump()
     {
@@ -173,10 +182,11 @@ public class InputManager : MonoBehaviour
 
     }
 
-    void SpawnParticles()
+    void JumpParticles()
     {
         Instantiate(particle, new Vector3(transform.position.x, transform.position.y - transform.localScale.y/2, 0), Quaternion.identity);
     }
+
     void Die()
     {
         GameManager gm = FindObjectOfType <GameManager>();

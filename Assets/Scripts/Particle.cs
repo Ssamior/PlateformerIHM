@@ -9,17 +9,18 @@ public class Particle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        col = transform.gameObject.GetComponent<SpriteRenderer>().color;
+        col = GetComponent<SpriteRenderer>().color;
     }
 
     // Update is called once per frame
     void Update()
     {
         col.a -= Time.deltaTime / particleLifetime;
-        transform.gameObject.GetComponent<SpriteRenderer>().color = col;
-        if (transform.gameObject.GetComponent<SpriteRenderer>().color.a <= 0)
+        transform.localScale = new Vector3(transform.localScale.x + 2 * Time.deltaTime / particleLifetime, transform.localScale.y, transform.localScale.z);
+        GetComponent<SpriteRenderer>().color = col;
+        if (GetComponent<SpriteRenderer>().color.a <= 0)
         {
-            Destroy(transform.gameObject);
+            Destroy(gameObject);
         }
     }
 }
