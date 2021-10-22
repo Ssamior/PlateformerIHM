@@ -11,7 +11,7 @@ TagManager:
   - Walls
   - Water
   - UI
-  - 
+  - Obstacles
   - 
   - 
   - 
@@ -40,6 +40,9 @@ TagManager:
   m_SortingLayers:
   - name: Water
     uniqueID: 245495191
+    locked: 0
+  - name: Obstacles
+    uniqueID: 2889161105
     locked: 0
   - name: Default
     uniqueID: 0

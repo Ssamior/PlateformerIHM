@@ -17,6 +17,7 @@ public class InputManager : MonoBehaviour
     public float dashCooldown;
     public LayerMask Walls;
     public LayerMask Water;
+    public LayerMask Obstacles;
     public GameObject jumpParticle;
     public GameObject sprintParticle;
 
@@ -142,6 +143,11 @@ public class InputManager : MonoBehaviour
         {
             positionFin += 10 * timeqt * Vector3.up;
         }
+        if (IsInObstacle(positionFin))
+        {
+            Debug.Log("obstacle");
+            Die();
+        }
 
 
         //Mouvement
@@ -154,7 +160,11 @@ public class InputManager : MonoBehaviour
 
     bool IsInWater(Vector3 position)
     {
-        return Physics2D.Raycast(position, Vector3.up, 0.1f, Water);
+        return Physics2D.Raycast(position, Vector3.up, 0.5f, Water);
+    }
+    bool IsInObstacle(Vector3 position)
+    {
+        return Physics2D.Raycast(position + transform.localScale.x * 0.4f * Vector3.left, Vector3.down, transform.localScale.y * 0.45f, Obstacles) || Physics2D.Raycast(position - transform.localScale.x * 0.4f * Vector3.left, Vector3.down, transform.localScale.y * 0.45f, Obstacles);
     }
     bool IsInsidePlatform(Vector3 position)
     {
@@ -195,7 +205,7 @@ public class InputManager : MonoBehaviour
     }
     void SprintParticles(float direction)
     {
-        if(Time.time > lastSprintParticle + 0.08f && Random.Range(0, 5) == 0)
+        if(direction != 0 && Time.time > lastSprintParticle + 0.08f && Random.Range(0, 5) == 0)
         {
             GameObject goParticle = Instantiate(sprintParticle, new Vector3(transform.position.x - direction * transform.localScale.x, transform.position.y - transform.localScale.y / 2, 0), Quaternion.identity) as GameObject;
             goParticle.SendMessage("setDirection", -direction);
