@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Particle : MonoBehaviour
+public class JumpParticle : MonoBehaviour
 {
     public float particleLifetime;
     private Color col;

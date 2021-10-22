@@ -139,7 +139,8 @@ MonoBehaviour:
   Water:
     serializedVersion: 2
     m_Bits: 16
-  particle: {fileID: 1644846907365330136, guid: 97137b930266ee04987dd27a2e27be3f, type: 3}
+  jumpParticle: {fileID: 1644846907365330136, guid: 97137b930266ee04987dd27a2e27be3f, type: 3}
+  sprintParticle: {fileID: 3120328522332772010, guid: 47fefa7b6c97725418a45570e87a5335, type: 3}
 --- !u!50 &1228442789307181438
 Rigidbody2D:
   serializedVersion: 4

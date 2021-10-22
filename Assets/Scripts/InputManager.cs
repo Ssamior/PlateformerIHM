@@ -17,12 +17,15 @@ public class InputManager : MonoBehaviour
     public float dashCooldown;
     public LayerMask Walls;
     public LayerMask Water;
-    public GameObject particle;
+    public GameObject jumpParticle;
+    public GameObject sprintParticle;
 
 
     private Vector3 jumpStartPosition;
     private GameObject ground;
     private bool isJumpingUp;
+    private bool isSprinting;
+    private float lastSprintParticle = 0;
     private Vector3 moveDirection;
     private Vector3 positionInit;
     private Vector3 positionFin;
@@ -70,18 +73,24 @@ public class InputManager : MonoBehaviour
         {
             Dash();
         }
-        if(Input.GetKeyDown(KeyCode.LeftShift))
+        if(Input.GetKeyDown(KeyCode.W))
         {
             groundFriction = isInWater ? sprintGroundFriction/2 : sprintGroundFriction;
+            isSprinting = true;
         }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
+        if (Input.GetKeyUp(KeyCode.W))
         {
             groundFriction = isInWater ? baseGroundFriction/2 : baseGroundFriction;
+            isSprinting = false;
         }
 
         //Deplacement horizontal
         moveDirection = timeqt * horizontalInput * acceleration * groundFriction * airFriction * Vector3.right;
         positionFin += moveDirection;
+        if(isSprinting && IsGrounded(positionFin) && !isInWater)
+        {
+            SprintParticles(horizontalInput);
+        }
 
         //Saut
         //Input de saut
@@ -178,13 +187,21 @@ public class InputManager : MonoBehaviour
             positionFin = dashPosition;
             lastDash = Time.time;
         }
-        Die();
-
     }
 
     void JumpParticles()
     {
-        Instantiate(particle, new Vector3(transform.position.x, transform.position.y - transform.localScale.y/2, 0), Quaternion.identity);
+        Instantiate(jumpParticle, new Vector3(transform.position.x, transform.position.y - transform.localScale.y/2, 0), Quaternion.identity);
+    }
+    void SprintParticles(float direction)
+    {
+        if(Time.time > lastSprintParticle + 0.08f && Random.Range(0, 5) == 0)
+        {
+            GameObject goParticle = Instantiate(sprintParticle, new Vector3(transform.position.x - direction * transform.localScale.x, transform.position.y - transform.localScale.y / 2, 0), Quaternion.identity) as GameObject;
+            goParticle.SendMessage("setDirection", -direction);
+            lastSprintParticle = Time.time;
+        }
+        
     }
 
     void Die()
