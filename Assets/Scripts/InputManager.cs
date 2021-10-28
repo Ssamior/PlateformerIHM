@@ -74,12 +74,12 @@ public class InputManager : MonoBehaviour
         {
             Dash();
         }
-        if(Input.GetKeyDown(KeyCode.W))
+        if(Input.GetKeyDown(KeyCode.LeftShift))
         {
             groundFriction = isInWater ? sprintGroundFriction/2 : sprintGroundFriction;
             isSprinting = true;
         }
-        if (Input.GetKeyUp(KeyCode.W))
+        if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             groundFriction = isInWater ? baseGroundFriction/2 : baseGroundFriction;
             isSprinting = false;
@@ -151,8 +151,14 @@ public class InputManager : MonoBehaviour
 
 
         //Mouvement
-        positionFin += Vector3.up * yVel * timeqt;
+        positionFin.y += yVel * timeqt;
         transform.position = positionFin;
+
+        //Si hors de l'écran 
+        if (Mathf.Abs(positionFin.x)>50 || Mathf.Abs(positionFin.y)>50)
+        {
+            Die();
+        }
     }
 
 

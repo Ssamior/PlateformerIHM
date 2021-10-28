@@ -5,7 +5,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GameObject player;
+    [Tooltip("Coordinates for Level start point")]
     public float x;
+    [Tooltip("Coordinates for Level start point")]
     public float y;
 
     // Start is called before the first frame update

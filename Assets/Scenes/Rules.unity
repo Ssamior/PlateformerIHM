@@ -519,8 +519,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 60}
-  m_SizeDelta: {x: 160, y: 101.25}
+  m_AnchoredPosition: {x: 1.62, y: 60}
+  m_SizeDelta: {x: 247.6, y: 101.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1782215928
 MonoBehaviour:
@@ -555,13 +555,14 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Rules :
+  m_Text: 'Controls (Keyboard / Controlller):
 
-    Jump - Space
+    Jump - Space  /  A
 
-    E - Dash
+    Sprint
+    - Shift  /  RT
 
-    W (Shift) - Sprint
+    Dash - E  /  LT
 
 '
 --- !u!222 &1782215929
