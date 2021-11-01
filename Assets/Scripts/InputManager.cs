@@ -18,6 +18,7 @@ public class InputManager : MonoBehaviour
     public LayerMask Walls;
     public LayerMask Water;
     public LayerMask Obstacles;
+    public LayerMask Victory;
     public GameObject jumpParticle;
     public GameObject sprintParticle;
 
@@ -66,20 +67,20 @@ public class InputManager : MonoBehaviour
         isInWater = IsInWater(positionInit);
 
         //Inputs
-        if (Input.GetKeyUp(KeyCode.Escape))
+        if (Input.GetKeyUp(KeyCode.Escape) || Input.GetKeyUp(KeyCode.JoystickButton1))
         {
             SceneManager.LoadScene("MainMenu");
         }
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyUp(KeyCode.JoystickButton4))
         {
             Dash();
         }
-        if(Input.GetKeyDown(KeyCode.LeftShift))
+        if(Input.GetKey(KeyCode.LeftShift) || Input.GetAxis("Fire1") != 0)
         {
             groundFriction = isInWater ? sprintGroundFriction/2 : sprintGroundFriction;
             isSprinting = true;
         }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
+        else if (Input.GetAxis("Fire1") == 0)
         {
             groundFriction = isInWater ? baseGroundFriction/2 : baseGroundFriction;
             isSprinting = false;
@@ -95,7 +96,7 @@ public class InputManager : MonoBehaviour
 
         //Saut
         //Input de saut
-        if (CanJump() && Input.GetKeyDown(KeyCode.Space))
+        if (CanJump() && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyUp(KeyCode.JoystickButton0)))
         {
             jumpStartPosition = positionInit;
             isJumpingUp = true;
@@ -145,8 +146,11 @@ public class InputManager : MonoBehaviour
         }
         if (IsInObstacle(positionFin))
         {
-            Debug.Log("obstacle");
             Die();
+        }
+        if (GetVictoryToken(positionFin))
+        {
+            Win();
         }
 
 
@@ -171,6 +175,10 @@ public class InputManager : MonoBehaviour
     bool IsInObstacle(Vector3 position)
     {
         return Physics2D.Raycast(position + transform.localScale.x * 0.4f * Vector3.left, Vector3.down, transform.localScale.y * 0.45f, Obstacles) || Physics2D.Raycast(position - transform.localScale.x * 0.4f * Vector3.left, Vector3.down, transform.localScale.y * 0.45f, Obstacles);
+    }
+    bool GetVictoryToken(Vector3 position)
+    {
+        return Physics2D.Raycast(position + transform.localScale.x * 0.4f * Vector3.left, Vector3.down, transform.localScale.y * 0.45f, Victory) || Physics2D.Raycast(position - transform.localScale.x * 0.4f * Vector3.left, Vector3.down, transform.localScale.y * 0.45f, Victory);
     }
     bool IsInsidePlatform(Vector3 position)
     {
@@ -224,5 +232,10 @@ public class InputManager : MonoBehaviour
     {
         GameManager gm = FindObjectOfType <GameManager>();
         gm.KillPlayer(gameObject);
-      }
+    }
+
+    void Win()
+    {
+        SceneManager.LoadScene("VictoryMenu");
+    }
 }
